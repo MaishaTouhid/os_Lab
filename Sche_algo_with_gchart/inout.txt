@@ -1,0 +1,400 @@
+
+
+## 1. FCFS
+
+### Input
+
+```text
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+```
+
+### Output
+
+```text
+Process    Burst    Waiting    Turnaround
+P1         10       0          10
+P2         5        10         15
+P3         8        15         23
+
+Average Waiting Time = 8.33
+Average Turnaround Time = 16.00
+
+Gantt Chart:
+ ------------------------
+|  P1   |  P2   |  P3   |
+ ------------------------
+0       10       15       23
+```
+
+**Execution:** `P1 → P2 → P3`
+
+---
+
+# 2. SJF (Non-Preemptive)
+
+### Input
+
+```text
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+```
+
+Burst time ছোট থেকে:
+
+`P2(5) → P3(8) → P1(10)`
+
+### Output
+
+```text
+Process    Burst    Waiting    Turnaround
+P1         5        0          5
+P2         8        5          13
+P3         10       13         23
+
+Average Waiting Time = 6.00
+Average Turnaround Time = 13.67
+
+Gantt Chart:
+ ------------------------
+|  P1   |  P2   |  P3   |
+ ------------------------
+0       5        13       23
+```
+
+⚠️ **তোমার বর্তমান code-এ P1/P2/P3 ID sort করার কারণে output-এ P1=5 দেখাবে।** Actual original process ধরে execution হলো:
+
+```text
+P2 → P3 → P1
+```
+
+অর্থাৎ technically correct Gantt Chart হওয়া উচিত:
+
+```text
+ ------------------------
+|  P2   |  P3   |  P1   |
+ ------------------------
+0       5        13       23
+```
+
+---
+
+# 3. Priority Scheduling
+
+এখানে **lower priority number = higher priority**।
+
+### Input
+
+```text
+Enter number of processes: 3
+
+P1 - Burst Time: 10
+P1 - Priority: 2
+
+P2 - Burst Time: 5
+P2 - Priority: 1
+
+P3 - Burst Time: 8
+P3 - Priority: 3
+```
+
+Priority অনুযায়ী:
+
+`P2(1) → P1(2) → P3(3)`
+
+### Output
+
+```text
+Process    Burst    Priority    Waiting    Turnaround
+P1         5        1           0          5
+P2         10       2           5          15
+P3         8        3           15         23
+
+Average Waiting Time = 6.67
+Average Turnaround Time = 14.33
+
+Gantt Chart:
+ ------------------------
+|  P1   |  P2   |  P3   |
+ ------------------------
+0       5        15       23
+```
+
+Actual original process অনুযায়ী Gantt Chart:
+
+```text
+ ------------------------
+|  P2   |  P1   |  P3   |
+ ------------------------
+0       5        15       23
+```
+
+**Execution:** `P2 → P1 → P3`
+
+---
+
+# 4. Round Robin
+
+Time Quantum = **2**
+
+### Input
+
+```text
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+
+Enter Time Quantum: 2
+```
+
+### Gantt Chart
+
+```text
+| P1 | P2 | P3 | P1 | P2 | P3 | P1 | P2 | P3 | P1 | P3 | P1 |
+0    2    4    6    8   10   12   14   15   17   19   21   23
+```
+
+### Output
+
+```text
+Process    Burst    Waiting    Turnaround
+P1         10       13         23
+P2         5        14         19
+P3         8        13         21
+
+Average Waiting Time = 13.33
+Average Turnaround Time = 21.00
+```
+
+**Execution:**
+
+```text
+P1 → P2 → P3 → P1 → P2 → P3 → P1 → P2 → P3 → P1 → P3 → P1
+```
+
+⚠️ এটা তোমার আগের দেওয়া RR output-এর থেকে আলাদা, কারণ সেখানে P2-এর WT/TAT ভুল ছিল। **এইটাই standard Round Robin হিসাব।**
+
+---
+
+# 5. SRTF — Shortest Remaining Time First
+
+এটার জন্য Arrival Time দরকার। তাই একটা নতুন input নিচ্ছি।
+
+### Input
+
+```text
+Enter number of processes: 3
+
+P1 - Arrival Time: 0
+P1 - Burst Time: 8
+
+P2 - Arrival Time: 1
+P2 - Burst Time: 4
+
+P3 - Arrival Time: 2
+P3 - Burst Time: 2
+```
+
+Execution:
+
+* Time 0 → P1 শুরু
+* Time 1 → P2 আসে, P2-এর remaining 4 < P1-এর remaining 7 → P1 preempt
+* Time 2 → P3 আসে, P3-এর remaining 2 সবচেয়ে ছোট → P3 চলে
+* তারপর P2
+* শেষে P1
+
+### Gantt Chart
+
+```text
+| P1 | P2 | P3 | P2 | P1 |
+0    1    2    4    6    13
+```
+
+### Output
+
+```text
+Process    Arrival    Burst    Waiting    Turnaround
+P1         0          8        5          13
+P2         1          4        1          5
+P3         2          2        0          2
+
+Average Waiting Time = 2.00
+Average Turnaround Time = 6.67
+```
+
+---
+
+# সবগুলো এক নজরে
+
+| Algorithm       | Input-এর প্রধান data | Execution              |
+| --------------- | -------------------- | ---------------------- |
+| **FCFS**        | Burst Time           | P1 → P2 → P3           |
+| **SJF**         | Burst Time           | P2 → P3 → P1           |
+| **Priority**    | Burst + Priority     | P2 → P1 → P3           |
+| **Round Robin** | Burst + Quantum      | P1 → P2 → P3 → ...     |
+| **SRTF**        | Arrival + Burst      | P1 → P2 → P3 → P2 → P1 |
+
+### পরীক্ষায় Gantt Chart মনে রাখার সবচেয়ে সহজ নিয়ম
+
+**FCFS:** আগে যে এসেছে → আগে চলবে
+**SJF:** সবচেয়ে ছোট Burst → আগে চলবে
+**Priority:** সবচেয়ে high priority → আগে চলবে
+**RR:** সবাই → Quantum অনুযায়ী পালা করে
+**SRTF:** যার **remaining time সবচেয়ে কম** → সে চলবে, দরকার হলে current process-কে **preempt** করবে।
+
+1️⃣ Multilevel Queue — RR + FCFS
+
+Input:
+
+Enter number of processes in Queue 1: 3
+Enter burst time of Queue 1 processes:
+P1: 5
+P2: 3
+P3: 4
+
+Enter number of processes in Queue 2: 2
+Enter burst time of Queue 2 processes:
+P4: 6
+P5: 2
+
+Output:
+
+--- Queue 1 (Round Robin) ---
+
+Gantt Chart:
+| P1 | P2 | P3 | P1 | P2 | P3 |
+0    2    4    6    8    9    11
+
+Process Burst   Waiting Turnaround
+P1      5       6       11
+P2      3       6       9
+P3      4       7       11
+
+Average Waiting Time = 6.33
+Average Turnaround Time = 10.33
+
+
+--- Queue 2 (FCFS) ---
+
+Gantt Chart:
+| P4 | P5 |
+0    6    8
+
+Process Burst   Waiting Turnaround
+P4      6       0       6
+P5      2       6       8
+
+Average Waiting Time = 3.00
+Average Turnaround Time = 7.00
+
+Note: তোমার current code-এ Queue 2 আবার time = 0 থেকে Gantt Chart দেখাবে। তাই এখানে Queue 2-এর chart 0 → 6 → 8।
+
+2️⃣ Preemptive Priority Scheduling
+
+এখানে ছোট priority number = higher priority ধরে তোমার code কাজ করে।
+
+Input:
+
+Enter number of processes: 4
+
+Enter arrival time, burst time and priority:
+
+P1 - Arrival Time: 0
+P1 - Burst Time: 7
+P1 - Priority: 3
+
+P2 - Arrival Time: 1
+P2 - Burst Time: 4
+P2 - Priority: 1
+
+P3 - Arrival Time: 2
+P3 - Burst Time: 3
+P3 - Priority: 4
+
+P4 - Arrival Time: 3
+P4 - Burst Time: 2
+P4 - Priority: 2
+
+Output:
+
+Gantt Chart:
+
+| P1 | P2 | P4 | P1 | P3 |
+0    1    5    7    13   16
+
+Process Arrival Burst Priority    Waiting Turnaround
+P1      0       7     3           6       13
+P2      1       4     1           3       7
+P3      2       3     4           11      14
+P4      3       2     2           2       4
+
+Average Waiting Time = 5.50
+Average Turnaround Time = 9.50
+
+এখানে:
+
+0 → 1    P1
+1 → 5    P2
+5 → 7    P4
+7 → 13   P1
+13 → 16  P3
+
+তাই এটা Preemptive Priority হওয়ায় P1 মাঝখানে preempt হয়েছে।
+
+3️⃣ Multilevel Feedback Queue (MLFQ)
+
+তোমার code অনুযায়ী:
+
+Queue 1 → Round Robin, Quantum = 2
+Queue 2 → Round Robin, Quantum = 4
+Queue 3 → FCFS
+
+Input:
+
+Enter number of processes: 5
+
+Enter burst time of processes:
+P1: 5
+P2: 3
+P3: 8
+P4: 2
+P5: 6
+
+Output:
+
+Gantt Chart:
+
+| P1 | P2 | P3 | P4 | P5 | P1 | P2 | P3 | P5 | P3 |
+0    2    4    6    8    10   12   13   17   21   23
+
+Process Burst   Waiting Turnaround
+P1      5       7       12
+P2      3       10      13
+P3      8       15      23
+P4      2       6       8
+P5      6       15      21
+
+Average Waiting Time = 10.60
+Average Turnaround Time = 15.40
+MLFQ-এর execution বুঝলে:
+Queue 1 (Q=2):
+P1 → P2 → P3 → P4 → P5
+
+Queue 2 (Q=4):
+P1 → P2 → P3 → P5
+
+Queue 3 (FCFS):
+P3
+
+তাই overall:
+
+| P1 | P2 | P3 | P4 | P5 | P1 | P2 | P3 | P5 | P3 |
+0    2    4    6    8    10   12   13   17   21   23

@@ -1,0 +1,188 @@
+Input সহ পুরো output নিচে দিলাম:
+
+## 1. FCFS (fcfs_gantt.c)
+
+```
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+
+Process   Burst   Waiting   Turnaround
+P1        10      0         10
+P2        5       10        15
+P3        8       15        23
+
+Average Waiting Time = 8.33
+Average Turnaround Time = 16.00
+
+Gantt Chart:
+ _______________
+| P1  | P2  | P3  |
+ _______________
+0    10   15   23
+```
+
+## 2. SJF (sjf_gantt.c)
+
+```
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+
+Process   Burst   Waiting   Turnaround
+P2        5       0         5
+P3        8       5         13
+P1        10      13        23
+
+Average Waiting Time = 6.00
+Average Turnaround Time = 13.67
+
+Gantt Chart:
+ _______________
+| P2  | P3  | P1  |
+ _______________
+0     5    13   23
+```
+
+## 3. Priority (priority_gantt.c)
+
+```
+Enter number of processes: 3
+Enter burst time and priority of each process (lower number = higher priority):
+P1 - Burst Time: 10
+P1 - Priority: 2
+P2 - Burst Time: 5
+P2 - Priority: 1
+P3 - Burst Time: 8
+P3 - Priority: 3
+
+Process   Burst   Priority   Waiting   Turnaround
+P2        5       1          0         5
+P1        10      2          5         15
+P3        8       3          15        23
+
+Average Waiting Time = 6.67
+Average Turnaround Time = 14.33
+
+Gantt Chart:
+ _______________
+| P2  | P1  | P3  |
+ _______________
+0     5    15   23
+```
+
+## 4. Round Robin (rr_gantt.c)
+
+```
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+Enter Time Quantum: 2
+
+Process   Burst   Waiting   Turnaround
+P1        10      13        23
+P2        5       10        15
+P3        8       13        21
+
+Average Waiting Time = 12.00
+Average Turnaround Time = 19.67
+
+Gantt Chart:
+| P1 | P2 | P3 | P1 | P2 | P3 | P1 | P2 | P3 | P1 | P3 | P1 |
+0    2    4    6    8    10   12   14   15   17   19   21   23
+```
+
+## 5. SRTF (srtf_gantt.c)
+
+```
+Enter number of processes: 3
+Enter arrival time and burst time of each process:
+P1 - Arrival Time: 0
+P1 - Burst Time: 8
+P2 - Arrival Time: 1
+P2 - Burst Time: 4
+P3 - Arrival Time: 2
+P3 - Burst Time: 9
+
+Process   Arrival   Burst   Waiting   Turnaround
+P1        0         8       4         12
+P2        1         4       0         4
+P3        2         9       10        19
+
+Average Waiting Time = 4.67
+Average Turnaround Time = 11.67
+
+Gantt Chart:
+| P1 | P2 | P1 | P3 |
+0    1    5    12   21
+```
+
+1. Preemptive Priority Scheduling
+Enter number of processes: 3
+Enter arrival time, burst time and priority (lower number = higher priority):
+P1 - Arrival Time: 0
+P1 - Burst Time: 10
+P1 - Priority: 2
+P2 - Arrival Time: 1
+P2 - Burst Time: 5
+P2 - Priority: 1
+P3 - Arrival Time: 2
+P3 - Burst Time: 8
+P3 - Priority: 3
+
+Process  Arrival Burst  Priority  Waiting  Turnaround
+P1       0       10     2         5        15
+P2       1       5      1         0        5
+P3       2       8      3         13       21
+
+Gantt Chart:
+| P1 | P2 | P1 | P3 |
+0    1    6    15   23
+
+লজিক: প্রতি 1 unit সময়ে arrive করা process গুলোর মধ্যে সবচেয়ে ভালো (ছোট সংখ্যা) priority-র process কে চালায়; নতুন high-priority process এলে আগেরটা থেমে যায় (preempt)।
+
+2. Multilevel Queue Scheduling
+Enter number of processes: 4
+Enter burst time and queue number (1 = High Priority, 2 = Low Priority) of each process:
+P1 - Burst Time: 5
+P1 - Queue (1 or 2): 1
+P2 - Burst Time: 8
+P2 - Queue (1 or 2): 2
+P3 - Burst Time: 3
+P3 - Queue (1 or 2): 1
+P4 - Burst Time: 6
+P4 - Queue (1 or 2): 2
+
+Process  Burst  Queue  Waiting  Turnaround
+P1       5      1      0        5
+P2       8      2      8        16
+P3       3      1      5        8
+P4       6      2      16       22
+
+Gantt Chart:
+| P1 | P3 | P2 | P4 |
+0    5    8    16   22
+
+লজিক: Queue 1 (high priority)-র সব process আগে FCFS-এ চলে, তারপর Queue 2 চলে — দুই queue-র মধ্যে fixed priority।
+
+3. MLFQ (Multilevel Feedback Queue)
+Enter number of processes: 3
+Enter burst time of each process:
+P1: 10
+P2: 5
+P3: 8
+
+Process  Burst  Waiting  Turnaround
+P1       10     11       21
+P2       5      8        13
+P3       8      15       23
+
+Gantt Chart:
+| P1 | P2 | P3 | P1 | P2 | P3 | P1 | P3 |
+0    2    4    6    10   13   17   21   23
